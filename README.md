@@ -11,3 +11,7 @@ In this plot I pulled in data of 2 playlists. One being a KRnB playlist and the 
 **Description Plot: Relation between loudness and energy**
 
 In this plot i hyposthesised that energy and loudness had a correlation and it was shown to be indeed the case, this is even more shown by the regression line that is ran through the data points. You can also see a slight boundry line being present between kpop an krnb songs. Besides that there is again 1 outlier but in this case i want to highlight the 1 kpop song that falls in the krnb category in terms of loudness
+
+**Reason for generating these plots**
+
+Right now i'm focussing in exploring and get more information about the eastern side of rnb and kpop, i want to get more information about different parameters spotify has given us to evaluate songs. 
