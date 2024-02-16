@@ -35,9 +35,49 @@ juditha <- get_track_audio_features(c("2M5b9YLAgFroqWzeaZf86e", "3DBKc4ioGnMQLlb
 alla <- get_album_tracks("7oI0E3DdTbD85rhMg19GSU")
 gilberto <- get_artist_audio_features("gilberto gil")
 ecm <- get_playlist_audio_features("", "1zN4nK6oHMo2dei2WWPtSL")
+krnb <- get_playlist_audio_features("", "37i9dQZF1EIecOSIx69OSk")
+kpop <- get_playlist_audio_features("", "37i9dQZF1EQpesGsmIyqcW")
+warr <- get_track_audio_features(c("1ZEFYW6nPEvIcsIvymgsLk", "3DBKc4ioGnMQLlbGQcFDIO"))
+
 ```
 
 ```{r pressure, echo=FALSE}
-head(ecm)
+head(juditha)
+colnames(juditha)
 ```
 
+```{r pressure, echo=FALSE}
+head(krnb)
+library(ggplot2)
+```
+
+```{r column_names, echo=FALSE}
+colnames(ecm)
+
+```
+```{r energy plot, echo=FALSE}
+# Calculate mean values
+krnb_mean <- mean(krnb$energy)
+kpop_mean <- mean(kpop$energy)
+
+# Plot with mean lines
+ggplot() +
+  geom_histogram(data = krnb, aes(x = energy, fill = "Korean R&B"), alpha = 0.5) +
+  geom_histogram(data = kpop, aes(x = energy, fill = "K-POP"), alpha = 0.5) +
+  geom_vline(xintercept = krnb_mean, color = "green", linetype = "dashed", size = 1) + # Mean line for Korean R&B
+  geom_vline(xintercept = kpop_mean, color = "red", linetype = "dashed", size = 1) +    # Mean line for K-POP
+  scale_fill_manual(name = "Genre", values = c("Korean R&B" = "green", "K-POP" = "red")) +
+  theme(legend.position = "right") + labs(title = "Energy Difference between Krnb and Kpop")
+
+ggplot() +
+  geom_point(data = krnb, aes(energy, loudness, color = "krnb"), alpha = 0.7) +
+  geom_point(data = kpop, aes(energy, loudness, color = "kpop"), alpha = 0.7) +
+  # Calculate and add a linear regression line through all points
+  geom_smooth(data = rbind(krnb, kpop), aes(energy, loudness), method = "lm", se = FALSE, color = "red", alpha = 0.7) +
+  scale_color_manual(values = c("krnb" = "blue", "kpop" = "pink"),
+                     labels = c("kpop", "krnb"),
+                     name = "Genres") + labs(title = "Relation between loudness and energy")
+
+
+
+```
