@@ -8,4 +8,6 @@ My corpus consists of 2 playlist of songs that i listen to of western pop songs 
 
 In this plot I pulled in data of 2 playlists. One being a KRnB playlist and the other one being a KPOP playlist. For these playlists i hypothesised that the KPOP playlist would have a higher mean energy lever than the krnb playlist. This hypothesis turned out to be true when looking at the histogram plot. Besides the mean energy level indeed being higher for KPOP songs, you can also see a slight overlap with some krnb and kpop songs having the same energy levels. An interesting finding is that there are some krnb songs that fall in the upper spectrum of the energy level of even KPOP songs. In the future i would like to find out which songs they are and if they "feel" like krnb and are even made by artists that are known to release krnb songs. 
 
+**Description Plot: Relation between loudness and energy**
 
+In this plot i hyposthesised that energy and loudness had a correlation and it was shown to be indeed the case, this is even more shown by the regression line that is ran through the data points. You can also see a slight boundry line being present between kpop an krnb songs. Besides that there is again 1 outlier but in this case i want to highlight the 1 kpop song that falls in the krnb category in terms of loudness
