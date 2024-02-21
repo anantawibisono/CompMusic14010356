@@ -32,6 +32,8 @@ warr <- get_track_audio_features(c("1ZEFYW6nPEvIcsIvymgsLk", "3DBKc4ioGnMQLlbGQc
 Difference in Tempo
 ========================================
 
+Column {data-width=500}
+-------------------------------------
 
 ```{r stuff, echo=FALSE}
 library(ggplot2)
@@ -63,6 +65,8 @@ krnb_show_highest_2
 
 ```
 
+Column {data-width=500}
+-------------------------------------
 
 ```{r difference in tempo, echo=FALSE}
 # Calculate mean values
@@ -84,7 +88,7 @@ histies <- ggplot() +
   scale_fill_manual(name = "Genre", values = c("Personal Korean R&B Mix" = "green", "Personal K-POP Mix" = "red", "General Korean R&B" = "blue", "General K-POP" = "yellow" )) +
   theme(legend.position = "right") + labs(title = "Energy Difference between Krnb and Kpop") + theme_classic() 
 
-histies <- ggplotly(histies, height = 400)
+histies <- ggplotly(histies, height = 1000)
 
 histies
 ```
