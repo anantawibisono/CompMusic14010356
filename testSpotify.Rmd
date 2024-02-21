@@ -4,6 +4,7 @@ output:
     flexdashboard::flex_dashboard:
     storyboard: true
     theme: plotly
+    vertical_layout: scroll
       
 date: "2024-02-14"
 ---
@@ -19,9 +20,9 @@ kpop_general <- get_playlist_audio_features("", "37i9dQZF1DX9tPFwDMOaN1")
 kpop_general_sorted <- kpop_general[order(kpop_general$energy), ]
 
 # Remove the 5 lowest energy tracks
-kpop_general_filtered <- kpop_general_sorted[-(1:5), ]
+kpop_general_49 <- kpop_general_sorted[-(1:5), ]
 
-kpop_general_filtered
+
 
 warr <- get_track_audio_features(c("1ZEFYW6nPEvIcsIvymgsLk", "3DBKc4ioGnMQLlbGQcFDIO"))
 
@@ -66,15 +67,15 @@ krnb_show
 # Calculate mean values
 krnb_mean <- mean(krnb$energy)
 kpop_mean <- mean(kpop$energy)
-gen_krnb_mean <- mean(krnb_general$energy)
-gen_kpop_mean <- mean(kpop_general$energy)
+gen_krnb_mean <- mean(krnb_general_50$energy)
+gen_kpop_mean <- mean(kpop_general_49$energy)
 
 # Plot with mean lines
 histies <- ggplot() +
   geom_histogram(data = krnb, aes(x = energy, fill = "Personal Korean R&B Mix"), alpha = 0.5) +
   geom_histogram(data = kpop, aes(x = energy, fill = "Personal K-POP Mix"), alpha = 0.5) +
   geom_histogram(data = krnb_general_50, aes(x = energy, fill = "General Korean R&B"), alpha = 0.5) +
-  geom_histogram(data = kpop_general, aes(x = energy, fill = "General K-POP"), alpha = 0.5) +
+  geom_histogram(data = kpop_general_49, aes(x = energy, fill = "General K-POP"), alpha = 0.5) +
   geom_vline(xintercept = krnb_mean, color = "green", linetype = "twodash", size = 0.5) + 
   geom_vline(xintercept = kpop_mean, color = "red", linetype = "twodash", size = 0.5) +    
   geom_vline(xintercept = gen_krnb_mean, color = "blue", linetype = "twodash", size = 0.5) + 
