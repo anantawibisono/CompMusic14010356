@@ -15,7 +15,17 @@ kpop <- get_playlist_audio_features("", "37i9dQZF1EQpesGsmIyqcW")
 krnb_general <- get_playlist_audio_features("", "2TJHOlrTUoLMHs9CTyxN9n")
 krnb_general_50 <- head(krnb_general, 50)
 kpop_general <- get_playlist_audio_features("", "37i9dQZF1DX9tPFwDMOaN1")
+
+kpop_general_sorted <- kpop_general[order(kpop_general$energy), ]
+
+# Remove the 5 lowest energy tracks
+kpop_general_filtered <- kpop_general_sorted[-(1:5), ]
+
+kpop_general_filtered
+
 warr <- get_track_audio_features(c("1ZEFYW6nPEvIcsIvymgsLk", "3DBKc4ioGnMQLlbGQcFDIO"))
+
+
 
 ```
 
@@ -31,7 +41,7 @@ library(plotly)
 
 ### Plot: Difference in Tempo
 
-## Summary
+**Summary**
 
 In this plot I pulled in data of 4 different playlists: 
 
@@ -44,10 +54,10 @@ Lets only view the personal playlists for now
 
 For these playlists I hypothesized that the KPOP playlist would have a higher mean energy lever than the krnb playlist. This hypothesis turned out to be true when looking at the histogram plot. Besides the mean energy level indeed being higher for KPOP songs, you can also see a slight overlap with some krnb and kpop songs having the same energy levels. An interesting finding is that there are some krnb songs that fall in the upper spectrum of the energy level of even the KPOP song category. 
 
-```{r difference in tempo, echo=FALSE}
-krnb <- krnb[order(krnb$energy, decreasing = TRUE), c("energy", "track.name")]
+```{r show high energy level songs, echo=FALSE}
+krnb_show <- krnb[order(krnb$energy, decreasing = TRUE), c("energy", "track.name")]
 
-krnb
+krnb_show
 
 ```
 
@@ -77,7 +87,7 @@ histies <- ggplotly(histies)
 histies
 ```
 
-Relation between loudness and energy yea
+Relation between loudness and energy
 ========================================
 
 ### Plot: Relation between loudness and energy
