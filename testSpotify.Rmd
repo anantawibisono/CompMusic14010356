@@ -31,6 +31,27 @@ library(plotly)
 
 ### Plot: Difference in Tempo
 
+## Summary
+
+In this plot I pulled in data of 4 different playlists: 
+
+1. My Personal KrnB playlist
+2. My Personal Kpop playlist
+3. A curated KRnB playlist
+4. A curated KPOP playlist
+
+Lets only view the personal playlists for now
+
+For these playlists I hypothesized that the KPOP playlist would have a higher mean energy lever than the krnb playlist. This hypothesis turned out to be true when looking at the histogram plot. Besides the mean energy level indeed being higher for KPOP songs, you can also see a slight overlap with some krnb and kpop songs having the same energy levels. An interesting finding is that there are some krnb songs that fall in the upper spectrum of the energy level of even the KPOP song category. 
+
+```{r difference in tempo, echo=FALSE}
+krnb <- krnb[order(krnb$energy, decreasing = TRUE), c("energy", "track.name")]
+
+krnb
+
+```
+
+
 ```{r difference in tempo, echo=FALSE}
 # Calculate mean values
 krnb_mean <- mean(krnb$energy)
@@ -60,8 +81,6 @@ Relation between loudness and energy
 ========================================
 
 ### Plot: Relation between loudness and energy
-
-bladibladibla
 
 ```{r energy plot, echo=FALSE}
 corr_plot <- ggplot() +
