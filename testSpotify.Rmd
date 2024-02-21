@@ -2,9 +2,8 @@
 title: "Computational Musicology Project"
 output:
     flexdashboard::flex_dashboard:
-    storyboard: true
-    theme: plotly
-    vertical_layout: scroll
+      storyboard: true
+      theme: cerulean
       
 date: "2024-02-14"
 ---
@@ -58,7 +57,9 @@ For these playlists I hypothesized that the KPOP playlist would have a higher me
 ```{r show high energy level songs, echo=FALSE}
 krnb_show <- krnb[order(krnb$energy, decreasing = TRUE), c("energy", "track.name")]
 
-krnb_show
+krnb_show_highest_2 <- head(krnb_show, 2)
+
+krnb_show_highest_2
 
 ```
 
@@ -81,9 +82,9 @@ histies <- ggplot() +
   geom_vline(xintercept = gen_krnb_mean, color = "blue", linetype = "twodash", size = 0.5) + 
   geom_vline(xintercept = gen_kpop_mean, color = "yellow", linetype = "twodash", size = 0.5) +  
   scale_fill_manual(name = "Genre", values = c("Personal Korean R&B Mix" = "green", "Personal K-POP Mix" = "red", "General Korean R&B" = "blue", "General K-POP" = "yellow" )) +
-  theme(legend.position = "right") + labs(title = "Energy Difference between Krnb and Kpop") + theme_classic()
+  theme(legend.position = "right") + labs(title = "Energy Difference between Krnb and Kpop") + theme_classic() 
 
-histies <- ggplotly(histies)
+histies <- ggplotly(histies, height = 400)
 
 histies
 ```
