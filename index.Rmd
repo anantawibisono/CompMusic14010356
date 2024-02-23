@@ -4,6 +4,7 @@ output:
     flexdashboard::flex_dashboard:
       storyboard: true
       theme: flatly
+author: Ananta Wibisono
       
 date: "2024-02-14"
 ---
