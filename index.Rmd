@@ -28,6 +28,8 @@ warr <- get_track_audio_features(c("1ZEFYW6nPEvIcsIvymgsLk", "3DBKc4ioGnMQLlbGQc
 
 library(ggplot2)
 library(plotly)
+library(dplyr)
+library(tibble)
 
 ```
 
@@ -77,16 +79,16 @@ In this plot I pulled in data of 4 different playlists:
 3. A curated KRnB playlist
 4. A curated KPOP playlist
 
-Lets only view the personal playlists for now
+Lets only view the personal playlists for now by clicking on the legend of the interactive plot. 
 
-For these playlists I hypothesized that the KPOP playlist would have a higher mean energy lever than the krnb playlist. This hypothesis turned out to be true when looking at the histogram plot. Besides the mean energy level indeed being higher for KPOP songs, you can also see a slight overlap with some krnb and kpop songs having the same energy levels. An interesting finding is that there are some krnb songs that fall in the upper spectrum of the energy level of even the KPOP song category. 
+For these playlists I hypothesized that the KPOP playlist would have a higher mean energy level than the krnb playlist. This hypothesis turned out to be true when looking at the histogram plot. Besides the mean energy level indeed being higher for KPOP songs, you can also see a slight overlap with some krnb and kpop songs having the same energy levels. An interesting finding is that there are some krnb songs that fall in the upper spectrum of the energy level of even the KPOP song category: 
 
 ```{r show high energy level songs, echo=FALSE}
 krnb_show <- krnb[order(krnb$energy, decreasing = TRUE), c("energy", "track.name")]
 
-krnb_show_highest_2 <- head(krnb_show, 2)
-
-krnb_show_highest_2
+krnb_show %>%
+  slice_head(n = 2) %>%
+  knitr::kable()
 
 ```
 
