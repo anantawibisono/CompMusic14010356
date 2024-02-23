@@ -3,7 +3,7 @@ title: "Computational Musicology Project"
 output:
     flexdashboard::flex_dashboard:
       storyboard: true
-      theme: cerulean
+      theme: flatly
       
 date: "2024-02-14"
 ---
@@ -25,23 +25,47 @@ kpop_general_49 <- kpop_general_sorted[-(1:5), ]
 
 warr <- get_track_audio_features(c("1ZEFYW6nPEvIcsIvymgsLk", "3DBKc4ioGnMQLlbGQcFDIO"))
 
-
+library(ggplot2)
+library(plotly)
 
 ```
 
 Difference in Tempo
 ========================================
 
+
+
 Column {data-width=500}
 -------------------------------------
 
-```{r stuff, echo=FALSE}
-library(ggplot2)
-library(plotly)
-```
-
-
 ### Plot: Difference in Tempo
+
+```{r difference in tempo, echo=FALSE}
+# Calculate mean values
+krnb_mean <- mean(krnb$energy)
+kpop_mean <- mean(kpop$energy)
+gen_krnb_mean <- mean(krnb_general_50$energy)
+gen_kpop_mean <- mean(kpop_general_49$energy)
+
+# Plot with mean lines
+histies <- ggplot() +
+  geom_histogram(data = krnb, aes(x = energy, fill = "Personal Korean R&B Mix"), alpha = 0.5) +
+  geom_histogram(data = kpop, aes(x = energy, fill = "Personal K-POP Mix"), alpha = 0.5) +
+  geom_histogram(data = krnb_general_50, aes(x = energy, fill = "General Korean R&B"), alpha = 0.5) +
+  geom_histogram(data = kpop_general_49, aes(x = energy, fill = "General K-POP"), alpha = 0.5) +
+  geom_vline(xintercept = krnb_mean, color = "green", linetype = "twodash", size = 0.5) + 
+  geom_vline(xintercept = kpop_mean, color = "red", linetype = "twodash", size = 0.5) +    
+  geom_vline(xintercept = gen_krnb_mean, color = "blue", linetype = "twodash", size = 0.5) + 
+  geom_vline(xintercept = gen_kpop_mean, color = "yellow", linetype = "twodash", size = 0.5) +  
+  scale_fill_manual(name = "Genre", values = c("Personal Korean R&B Mix" = "green", "Personal K-POP Mix" = "red", "General Korean R&B" = "blue", "General K-POP" = "yellow" )) +
+  theme(legend.position = "right") + labs(title = "Energy Difference between Krnb and Kpop") + theme_classic() 
+
+histies <- ggplotly(histies)
+
+histies
+```
+Column {data-width=500}
+-------------------------------------
 
 **Summary**
 
@@ -65,36 +89,11 @@ krnb_show_highest_2
 
 ```
 
-Column {data-width=500}
--------------------------------------
-
-```{r difference in tempo, echo=FALSE}
-# Calculate mean values
-krnb_mean <- mean(krnb$energy)
-kpop_mean <- mean(kpop$energy)
-gen_krnb_mean <- mean(krnb_general_50$energy)
-gen_kpop_mean <- mean(kpop_general_49$energy)
-
-# Plot with mean lines
-histies <- ggplot() +
-  geom_histogram(data = krnb, aes(x = energy, fill = "Personal Korean R&B Mix"), alpha = 0.5) +
-  geom_histogram(data = kpop, aes(x = energy, fill = "Personal K-POP Mix"), alpha = 0.5) +
-  geom_histogram(data = krnb_general_50, aes(x = energy, fill = "General Korean R&B"), alpha = 0.5) +
-  geom_histogram(data = kpop_general_49, aes(x = energy, fill = "General K-POP"), alpha = 0.5) +
-  geom_vline(xintercept = krnb_mean, color = "green", linetype = "twodash", size = 0.5) + 
-  geom_vline(xintercept = kpop_mean, color = "red", linetype = "twodash", size = 0.5) +    
-  geom_vline(xintercept = gen_krnb_mean, color = "blue", linetype = "twodash", size = 0.5) + 
-  geom_vline(xintercept = gen_kpop_mean, color = "yellow", linetype = "twodash", size = 0.5) +  
-  scale_fill_manual(name = "Genre", values = c("Personal Korean R&B Mix" = "green", "Personal K-POP Mix" = "red", "General Korean R&B" = "blue", "General K-POP" = "yellow" )) +
-  theme(legend.position = "right") + labs(title = "Energy Difference between Krnb and Kpop") + theme_classic() 
-
-histies <- ggplotly(histies, height = 1000)
-
-histies
-```
-
 Relation between loudness and energy
 ========================================
+
+Column {data-width=500}
+-------------------------------------
 
 ### Plot: Relation between loudness and energy
 
@@ -112,3 +111,12 @@ corr_plot <- ggplotly(corr_plot)
 
 corr_plot
 ```
+
+Column {data-width=500}
+-------------------------------------
+
+**Summary**
+
+In this plot I pulled in data of 2 playlists. One being a KRnB playlist and the other one being a KPOP playlist. For these playlists i hypothesised that the KPOP playlist would have a higher mean energy lever than the krnb playlist. This hypothesis turned out to be true when looking at the histogram plot. Besides the mean energy level indeed being higher for KPOP songs, you can also see a slight overlap with some krnb and kpop songs having the same energy levels. An interesting finding is that there are some krnb songs that fall in the upper spectrum of the energy level of even KPOP songs. In the future i would like to find out which songs they are and if they "feel" like krnb and are even made by artists that are known to release krnb songs.
+
+
