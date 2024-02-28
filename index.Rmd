@@ -1,5 +1,5 @@
 ---
-title: "Computational Musicology Project"
+title: "Decoding KPOP vs. KRnB"
 output:
     flexdashboard::flex_dashboard:
       storyboard: true
@@ -39,9 +39,15 @@ Column {data-width=500}
 
 ### Corpus Description
 
-I have constructed a corpus comprising four playlists: two tailored to my personal taste in KRnB and KPOP, and another two featuring general KRnB and KPOP tracks. The selection of these playlists stems from my deep appreciation for KRnB and KPOP music genres. The personal playlists are curated by Spotify, leveraging my listening history, while the broader KRnB and KPOP playlists are popular among a wide audience.
+**Introduction**
 
-Through this corpus, my aim is to conduct an analysis elucidating the distinctions between KRnB and KPOP. Additionally, I seek to understand the underlying reasons behind my preference for certain KPOP and KRnB tracks over others.
+I've put together a collection of playlists that represent my taste in music, particularly focusing on KRnB and KPOP genres. These playlists consist of four categories: two are tailored to my personal preferences in KRnB and KPOP, while the other two feature more general KRnB and KPOP tracks. The selection of these playlists is based on my deep love for KRnB and KPOP music.
+
+The personal playlists are curated by Spotify, using my listening history to tailor the content to my tastes. On the other hand, the broader KRnB and KPOP playlists are popular among a wider audience.
+
+With this collection, I aim to analyze and understand the differences between KRnB and KPOP. I'm also interested in exploring why I prefer certain KPOP and KRnB tracks over others. This analysis will help me gain insights into my music preferences and the unique characteristics of these genres.
+
+
 
 Column {data-width=500}
 -------------------------------------
@@ -49,15 +55,15 @@ Column {data-width=500}
 ![]("C:\Users\anant\Downloads\overview.png")
 
 
-Difference in Tempo
+Corpus Analysis
 ========================================
 
 
 
-Column {data-width=750}
+Column {.tabset}
 -------------------------------------
 
-### Plot: Difference in Tempo
+### Energy Distribution
 
 ```{r difference in tempo, echo=FALSE}
 # Calculate mean values
@@ -84,38 +90,66 @@ histies <- ggplotly(histies)
 histies
 ```
 
+### Acousticness Comparison
+
+```{r timbre plot, echo=FALSE}
+library(Hmisc)
+
+# Add a column to each dataframe to specify the genre for labeling on the plot
+krnb$genre <- "krnb"
+kpop$genre <- "kpop"
+krnb_general_50$genre <- "krnb"
+kpop_general$genre <- "kpop"
+
+# Combine the dataframes
+combined_data <- rbind(krnb, kpop, krnb_general_50, kpop_general)
+
+# Create a boxplot for acousticness
+boxplot_acousticness <- ggplot(combined_data, aes(x = genre, y = acousticness, fill = genre)) +
+  geom_boxplot() +
+  labs(title = "Comparison of Acousticness between krnb and kpop", x = "Genre", y = "Acousticness") +
+  scale_fill_manual(values = c("krnb" = "purple", "kpop" = "green")) +
+  theme_minimal()
+
+
+boxplot_acousticness <- ggplotly(boxplot_acousticness)
+
+boxplot_acousticness
+```
+
 Column {data-width=250}
 -------------------------------------
 
-**Summary**
+**Energy Distribution**
 
 In this plot I pulled in data of 4 different playlists: 
 
 1. My Personal KrnB playlist
 2. My Personal Kpop playlist
-3. A curated KRnB playlist
-4. A curated KPOP playlist
+3. A popular KRnB playlist
+4. A popular KPOP playlist
 
-Lets only view the personal playlists for now by clicking on the legend of the interactive plot. 
+Let's first look at the personal playlists by selecting that option in the plot legend.
 
-For these playlists I hypothesized that the KPOP playlist would have a higher mean energy level than the krnb playlist. This hypothesis turned out to be true when looking at the histogram plot. Besides the mean energy level indeed being higher for KPOP songs, you can also see a slight overlap with some krnb and kpop songs having the same energy levels. An interesting finding is that there are some krnb songs that fall in the upper spectrum of the energy level of even the KPOP song category: 
+What we see is that, on average, KPOP songs tend to have higher energy levels compared to KRnB. But there's a catch – there's some overlap between the two genres. This means that a KRnB track could have the energy level typical of a KPOP song, and vice versa. It goes to show that energy level is just one factor among many that define a song's genre.
 
-```{r show high energy level songs, echo=FALSE}
-krnb_show <- krnb[order(krnb$energy, decreasing = TRUE), c("energy", "track.name")]
+Now, when we switch over to the general playlists, things look different. The songs seem more spread out across energy levels compared to the personal playlists. This suggests that personally, I might have a specific energy level in mind when picking KRnB or KPOP songs for my playlists. It's all about personal taste and what vibes with me the most.
 
-krnb_show %>%
-  slice_head(n = 2) %>%
-  knitr::kable()
+**Acousticness Comparison**
 
-```
+
+Looking at the plot, it's clear that KRnB songs tend to have higher acousticness compared to KPOP tunes. There's just a small sliver of overlap between the acousticness of KRnB and KPOP tracks. Also, notice how the range of acousticness for KRnB songs is wider than that of KPOP. This suggests that KRnB artists have more leeway in using different instruments compared to the more structured sound of KPOP.
+
+
 
 Relation between loudness and energy
 ========================================
 
+
 Column {.tabset}
 -------------------------------------
 
-### Plot: Relation between loudness and energy
+### Acousticness Comparison
 
 ```{r energy plot, echo=FALSE}
 corr_plot <- ggplot() +
@@ -133,30 +167,7 @@ corr_plot <- ggplotly(corr_plot, tooltip = c("text"))
 corr_plot
 ```
 
-### Timbre plot
 
-```{r timbre plot, echo=FALSE}
-library(Hmisc)
-
-# Add a column to each dataframe to specify the genre for labeling on the plot
-krnb$genre <- "krnb"
-kpop$genre <- "kpop"
-
-# Combine the dataframes
-combined_data <- rbind(krnb, kpop)
-
-# Create a boxplot for acousticness
-boxplot_acousticness <- ggplot(combined_data, aes(x = genre, y = acousticness, fill = genre)) +
-  geom_boxplot() +
-  labs(title = "Comparison of Acousticness between krnb and kpop", x = "Genre", y = "Acousticness") +
-  scale_fill_manual(values = c("krnb" = "purple", "kpop" = "green")) +
-  theme_minimal()
-
-
-boxplot_acousticness <- ggplotly(boxplot_acousticness)
-
-boxplot_acousticness
-```
 
 
 Column {data-width=250}
