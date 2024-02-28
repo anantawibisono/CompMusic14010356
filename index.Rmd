@@ -30,20 +30,31 @@ library(ggplot2)
 library(plotly)
 library(dplyr)
 library(tibble)
-
 ```
 Overview
 ========================================
+
+Column {data-width=500}
+-------------------------------------
+
 ### Corpus Description
 
-My corpus consists of 2 playlist of songs that i listen to of western pop songs and k-pop songs that contain 50 tracks each, and 2 playlists of western and k-pop songs in general. The reason I chose this is because i’m an avid listener of kpop and I have some favourite pop songs. My reason for choosing my corpus is because I want to figure out the differences between western pop songs and the ever more popular kpop genre and also what makes me like certain pop songs and if there exists a common factor within kpop and western pop songs that i like. I will be choosing the personal mix for kpop and western pop and furthermore curated playlists for kpop and western pop made by spotify themselves. This assures represenativeness. Furthermore there are no atypical songs in the corpus that is chosen
+I have constructed a corpus comprising four playlists: two tailored to my personal taste in KRnB and KPOP, and another two featuring general KRnB and KPOP tracks. The selection of these playlists stems from my deep appreciation for KRnB and KPOP music genres. The personal playlists are curated by Spotify, leveraging my listening history, while the broader KRnB and KPOP playlists are popular among a wide audience.
+
+Through this corpus, my aim is to conduct an analysis elucidating the distinctions between KRnB and KPOP. Additionally, I seek to understand the underlying reasons behind my preference for certain KPOP and KRnB tracks over others.
+
+Column {data-width=500}
+-------------------------------------
+
+![]("C:\Users\anant\Downloads\overview.png")
+
 
 Difference in Tempo
 ========================================
 
 
 
-Column {data-width=500}
+Column {data-width=750}
 -------------------------------------
 
 ### Plot: Difference in Tempo
@@ -72,7 +83,8 @@ histies <- ggplotly(histies)
 
 histies
 ```
-Column {data-width=500}
+
+Column {data-width=250}
 -------------------------------------
 
 **Summary**
@@ -100,28 +112,57 @@ krnb_show %>%
 Relation between loudness and energy
 ========================================
 
-Column {data-width=500}
+Column {.tabset}
 -------------------------------------
 
 ### Plot: Relation between loudness and energy
 
 ```{r energy plot, echo=FALSE}
 corr_plot <- ggplot() +
-  geom_point(data = krnb, aes(energy, loudness, color = "krnb"), alpha = 0.7) +
-  geom_point(data = kpop, aes(energy, loudness, color = "kpop"), alpha = 0.7) +
+  geom_point(data = krnb, aes(energy, loudness, color = "krnb", size = valence, text = track.name), alpha = 0.7) +
+  geom_point(data = kpop, aes(energy, loudness, color = "kpop", size = valence, text = track.name), alpha = 0.7) +
   # Calculate and add a linear regression line through all points
-  geom_smooth(data = rbind(krnb, kpop), aes(energy, loudness), method = "lm", se = FALSE, color = "red", alpha = 0.7) +
-  scale_color_manual(values = c("krnb" = "blue", "kpop" = "pink"),
+  geom_smooth(data = rbind(krnb, kpop), aes(energy, loudness), method = "lm", se = FALSE, color = "red", alpha = 0.4) +
+  scale_color_manual(values = c("krnb" = "blue", "kpop" = "green"),
                      labels = c("kpop", "krnb"),
-                     name = "Genres") + labs(title = "Relation between loudness and energy")
+                     name = "Genres") + 
+  labs(title = "Energy vs Loudness with Valence as size")
 
-corr_plot <- ggplotly(corr_plot)
+corr_plot <- ggplotly(corr_plot, tooltip = c("text"))
 
 corr_plot
 ```
 
-Column {data-width=500}
+### Timbre plot
+
+```{r timbre plot, echo=FALSE}
+library(Hmisc)
+
+# Add a column to each dataframe to specify the genre for labeling on the plot
+krnb$genre <- "krnb"
+kpop$genre <- "kpop"
+
+# Combine the dataframes
+combined_data <- rbind(krnb, kpop)
+
+# Create a boxplot for acousticness
+boxplot_acousticness <- ggplot(combined_data, aes(x = genre, y = acousticness, fill = genre)) +
+  geom_boxplot() +
+  labs(title = "Comparison of Acousticness between krnb and kpop", x = "Genre", y = "Acousticness") +
+  scale_fill_manual(values = c("krnb" = "purple", "kpop" = "green")) +
+  theme_minimal()
+
+
+boxplot_acousticness <- ggplotly(boxplot_acousticness)
+
+boxplot_acousticness
+```
+
+
+Column {data-width=250}
 -------------------------------------
+
+
 
 **Summary**
 
