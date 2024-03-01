@@ -30,7 +30,141 @@ library(ggplot2)
 library(plotly)
 library(dplyr)
 library(tibble)
+library(compmus)
+library(tidyr)
+library(purrr)
 ```
+
+Self similarity matrices
+========================================
+
+Column {data-width=750}
+-------------------------------------
+
+### Self similarity matrix
+
+```{r self plot, echo=FALSE}
+bzt <-
+  get_tidy_audio_analysis("1ZEFYW6nPEvIcsIvymgsLk") |> # Change URI.
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+```
+
+```{r self plot2, echo=FALSE}
+  bzt |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "") + labs(title = "WA-R-R - Colde")
+```
+
+Column {data-width=250}
+-------------------------------------
+**Description**
+
+no description yet 
+
+this is my fav song tho btw
+
+Chroma and Timbre plots
+========================================
+
+Column {.tabset}
+-------------------------------------
+
+### Lowest Energy Song Chromagram
+
+```{r chromagram, echo=FALSE}
+
+
+wood1 <-
+  get_tidy_audio_analysis("6TBJkXHPhu3EsMk1bshwuI") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+wood1 |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c() +
+  labs(title = "ONLY - Leehi")
+```
+
+### Highest Energy Song Chromagram
+
+```{r chromagram2, echo=FALSE}
+library(tidyr)
+library(purrr)
+
+wood2 <-
+  get_tidy_audio_analysis("0CnpSTdL9l5vQM4YnzXtyo") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+wood2 |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c() + labs(title = "Panorama - IZ*ONE")
+```
+
+
+
+Column {data-width=250}
+-------------------------------------
+
+**Description**
+
+no description yet
+
 Overview
 ========================================
 
@@ -175,8 +309,8 @@ Column {data-width=250}
 
 
 
-**Summary**
+**Description**
 
-In this plot i hyposthesised that energy and loudness had a correlation and it was shown to be indeed the case, this is even more shown by the regression line that is ran through the data points. You can also see a slight boundry line being present between kpop an krnb songs. Besides that there is again 1 outlier but in this case i want to highlight the 1 kpop song that falls in the krnb category in terms of loudness
+In the plot, you can clearly see how energy and loudness are linked, especially with that regression line slicing through the data points. There's also this faint boundary line that seems to separate KPOP and KRnB songs. Oh, and there's this one standout: the KPOP hit "Cupid" by Fifty Fifty, chilling in the KRnB zone for loudness and energy. Just hover over the point to check it out!
 
 
