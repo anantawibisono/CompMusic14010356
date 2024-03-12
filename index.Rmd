@@ -237,7 +237,9 @@ In KPOP, the prevalence of C sharp, F, and G keys mirrors their common usage in 
 
 **Keygrams for songs in different keys**
 
-In looking at the keygrams of the most popular songs in your collection, some interesting patterns emerge regarding their tonal centers.
+Now lets look at the keygrams.
+
+In looking at the keygrams of the most popular songs in the corpus, some interesting patterns emerge regarding their tonal centers.
 
 For instance, when looking at the song in the key of D, we notice that the confidence for D minor key dominates, which suggests a strong association with that tonality. But what's really interesting is that the confidence for C sharp minor key pops up even more frequently than for D minor. This might be because of some connection between D minor and C sharp minor keys. The keys share some of the same notes, which could explain why C sharp minor shows up so prominently alongside D minor.
 
