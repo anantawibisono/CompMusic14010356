@@ -321,7 +321,7 @@ wood1 <-
   select(start, duration, pitches)
 
 wood1 |>
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  mutate(pitches = map(pitches, compmus_normalise, "chebyshev")) |>
   compmus_gather_chroma() |> 
   ggplot(
     aes(
@@ -351,7 +351,7 @@ wood2 <-
   select(start, duration, pitches)
 
 wood2 |>
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  mutate(pitches = map(pitches, compmus_normalise, "chebyshev")) |>
   compmus_gather_chroma() |> 
   ggplot(
     aes(
@@ -372,9 +372,19 @@ wood2 |>
 Column {data-width=150}
 -------------------------------------
 
-**Description**
+**Chromagram Comparison**
 
-no description yet
+I selected two songs from the corpus based on their energy and loudness scores provided by Spotify. One of the songs is "LIMBO" by keshi, which scores low in both energy and loudness. The other song is "Talk That Talk" by TWICE, which scores high in both energy and loudness.
+
+When comparing the chromagrams of these songs, the differences are quite apparent. "Talk That Talk" is notably higher in tempo compared to "LIMBO."
+
+In terms of musical composition, "Talk That Talk" employs a wider range of notes and chords whereas "LIMBO" maintains a simpler structure with a clear emphasis on the G sharp/A flat note.
+
+Regarding the data from the Spotify API, it seems less confident in identifying the notes used in "Talk That Talk" compared to "LIMBO." This could be attributed to the greater variability in the composition of "Talk That Talk."
+
+Overall, these observations underscore how songs can differ significantly in their energy, and musical complexity, as perceived by listeners.
+
+
 
 Overview
 ========================================
