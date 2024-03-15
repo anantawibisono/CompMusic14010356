@@ -129,16 +129,89 @@ key_templates <-
     "D#:min", circshift(minor_key, 3)
   )
 
-#combined_data
-#colnames(combined_data)
+# combined_data
+# colnames(combined_data)
 ```
+Tempogram
+========================================
+
+Column {.tabset}
+-------------------------------------
+### Tempo Histogram
+
+```{r tempo, echo=FALSE}
+# Split dataframe based on different values in the "Value" column
+df_kpop <- combined_data[combined_data$genre == "kpop", ]
+df_krnb <- combined_data[combined_data$genre == "krnb", ]
+
+# Plot with mean lines
+histies2 <- ggplot() +
+  geom_histogram(data = df_krnb, aes(x = tempo, fill = "KRnB", text = paste("Song:", track.name, tempo)), alpha = 0.5) +
+  geom_histogram(data = df_kpop, aes(x = tempo, fill = "K-POP", text = paste("Song:", track.name, tempo)), alpha = 0.5) +
+  scale_fill_manual(name = "Genre", values = c("KRnB" = "purple", "K-POP" = "cyan" )) + theme(legend.position = "right") + labs(title = "Tempo histogram for KRnB and KPOP")
+
+histies2 <- ggplotly(histies2, tooltip = "text")
+
+histies2
+```
+
+### Lowest Tempo: KPOP
+
+```{r tempogram, echo=FALSE}
+graveola <- get_tidy_audio_analysis("1c6kkrWnpy68eYDfBdxNtF")
+
+graveola |>
+  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic() + labs(title = "Shopper - IU")
+
+```
+
+
+### Highest Tempo: KR&B
+
+```{r tempogram2, echo=FALSE}
+graveola <- get_tidy_audio_analysis("4iZIvaus7v4wSjFvdF83NA")
+
+graveola |>
+  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic() + labs(title = "FLYING HIGH WITH U - Vinxen")
+
+```
+
+Column {data-width=275}
+-------------------------------------
+
+**Key Histogram**
+
+
+As you can see from the histogram, most K-pop songs tend to hover around 125 beats per minute (BPM), while KR&B songs often have a spike around 85 BPM. However, it's common for songs in both genres to stray from these averages. One standout outlier among KR&B tracks is "FLYING HIGH WITH U" by Vinxen. On the other hand, "shopper" by IU is one of the K-pop songs with a lower BPM. You can find these outliers by hovering over the plot, of which the tooltip shows the title and the BPM of each song. 
+
+Now, let's take a closer look at the tempogram analysis of these songs.
+
+**Shopper - IU**
+
+The tempogram displayed here is a non-cyclical one, meaning it may show multiples of the main BPM. In this case, it's interesting because Spotify tagged the song with a BPM of 75, but the tempogram indicates a BPM of around 200 for most of the song, with only a small dot around 75 BPM at the beginning. However, when you listen to the song, it starts to make sense. At the beginning, there's a section with a distinct clapping noise that seems to follow a rhythm of 75 BPM, uninterrupted by other instruments except for the vocals. This is followed by a beat that might sound like 200 BPM but is actually closer to 75 BPM to the human ear.
+
+**FLYING HIGH WITH U - Vinxen**
+
+Interestingly, the tempogram for this song does align with the BPM provided by Spotify, which is around 210 BPM. The tempogram even indicates activity for multiples of 210 BPM. However, despite this numerical match, when you actually listen to the song, it doesn't sound like it has such a fast tempo. This discrepancy might be due to the difference in tempo between the drums and the vocals. While the drums might be driving the high BPM detected by the tempogram, the vocals maintain a slower pace, resulting in an overall perception of a slower tempo. 
+
+
 
 Key Analysis
 ========================================
 
 Column {.tabset}
 -------------------------------------
-### Key Histogram
+### Key Histogram.
 
 ```{r key_histogram plot, echo=FALSE}
 # Dkey <- combined_data %>%
