@@ -33,6 +33,11 @@ library(tibble)
 library(compmus)
 library(tidyr)
 library(purrr)
+library(tidyverse)
+library(tidymodels)
+library(ggdendro)
+library(heatmaply)
+
 
 # Add a column to each dataframe to specify the genre for labeling on the plot
 krnb$genre <- "krnb"
@@ -131,7 +136,226 @@ key_templates <-
 
 # combined_data
 # colnames(combined_data)
+
+
+
 ```
+
+```{r duplicates, echo=FALSE}
+cleaned_dataset <- combined_data[!duplicated(combined_data$track.name) & !duplicated(combined_data$track.name, fromLast = TRUE), ]
+
+first_10_kpop <- head(kpop, 10)
+first_10_krnb <- head(krnb, 10)
+
+mixed <- rbind(first_10_kpop, first_10_krnb)
+
+cleaned_mixed <- mixed[!duplicated(mixed$track.name) & !duplicated(mixed$track.name, fromLast = TRUE), ]
+
+```
+
+Clustering
+========================================
+
+Column {.tabset}
+-------------------------------------
+
+### Dendogram
+```{r cluster, echo=FALSE}
+indie_juice <-
+  recipe(
+    track.name ~
+      danceability +
+      energy +
+      loudness +
+      speechiness +
+      acousticness +
+      instrumentalness +
+      liveness +
+      valence +
+      tempo,
+    data = cleaned_mixed
+  ) |>
+  step_center(all_predictors()) |>
+  step_scale(all_predictors()) |> 
+  # step_range(all_predictors()) |> 
+  prep(cleaned_mixed |> mutate(track.name = str_trunc(track.name, 20))) |>
+  juice() |>
+  column_to_rownames("track.name")
+
+indie_dist <- dist(indie_juice, method = "euclidean")
+
+```
+
+```{r cluster2, echo=FALSE}
+
+# Perform hierarchical clustering and prepare dendrogram data
+data_for_indie_clustering <- indie_dist |>
+  hclust(method = "complete") |>
+  dendro_data()
+
+# Prepare data for joining with labels
+playlist_data_for_join <- cleaned_mixed %>%
+  select(track.name, playlist_name) %>%
+  mutate(label = str_trunc(track.name, 20))
+
+# Join labels with dendrogram data
+data_for_indie_clustering$labels <- data_for_indie_clustering$labels %>%
+  left_join(playlist_data_for_join)
+
+# Add factor for coloring
+data_for_indie_clustering$labels$label <- factor(data_for_indie_clustering$labels$label)
+
+# Create dendrogram plot with text labels
+dendrogram_plot <- data_for_indie_clustering |>
+  ggdendrogram() + geom_hline(yintercept = 5.7, color = "red", size = 0.65) + 
+  geom_text(data = label(data_for_indie_clustering), aes(x, y = y - 1.3, 
+                                                        label=label, 
+                                                        hjust=0, 
+                                                        colour=playlist_name), size=3) +
+  coord_flip() + 
+  scale_y_reverse(expand=c(0.2, 0)) +
+  theme(axis.line.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.title.y=element_blank(),
+        panel.background=element_rect(fill="white"),
+        panel.grid=element_blank()) +
+  labs(title = "Playlist Clustering") +
+  guides(
+    colour = guide_legend(
+      title = "Playlist"
+    )
+  )
+
+# Convert ggplot plot to plotly object
+dendrogram_plot <- ggplotly(dendrogram_plot)
+
+dendrogram_plot
+```
+
+
+### Heatmap
+
+```{r Heatmap, echo=FALSE}
+heatmaply(
+  indie_juice,
+  hclustfun = hclust,
+  hclust_method = "complete",  # Change for single, average, or complete linkage.
+  dist_method = "euclidean"
+)
+
+```
+
+
+```{r}
+
+kpop_rows <- cleaned_dataset %>% filter(genre == "kpop")
+krnb_rows <- cleaned_dataset %>% filter(genre == "krnb")
+
+indie <-
+  bind_rows(
+    kpop_rows |> mutate(playlist = "kpop") |> slice_head(n = 30),
+    krnb_rows |> mutate(playlist = "krnb") |> slice_head(n = 30)
+  ) |> 
+  add_audio_analysis()
+```
+
+```{r}
+indie_features <-
+  indie |>  # For your portfolio, change this to the name of your corpus.
+  mutate(
+    playlist = factor(playlist),
+    segments = map2(segments, key, compmus_c_transpose),
+    pitches =
+      map(
+        segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      ),
+    timbre =
+      map(
+        segments,
+        compmus_summarise, timbre,
+        method = "mean",
+      )
+  ) |>
+  mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
+  mutate_at(vars(pitches, timbre), map, bind_rows) |>
+  unnest(cols = c(pitches, timbre))
+```
+
+```{r}
+indie_recipe <-
+  recipe(
+    playlist ~
+      danceability +
+      energy +
+      loudness +
+      speechiness +
+      acousticness +
+      instrumentalness +
+      liveness +
+      valence +
+      tempo +
+      duration +
+      C + `C#|Db` + D + `D#|Eb` +
+      E + `F` + `F#|Gb` + G +
+      `G#|Ab` + A + `A#|Bb` + B +
+      c01 + c02 + c03 + c04 + c05 + c06 +
+      c07 + c08 + c09 + c10 + c11 + c12,
+    data = indie_features           # Use the same name as the previous block.
+  ) |>
+  step_center(all_predictors()) |>
+  step_scale(all_predictors())      # Converts to z-scores.
+  # step_range(all_predictors())    # Sets range to [0, 1].
+```
+
+```{r}
+indie_cv <- indie_features |> vfold_cv(5)
+```
+
+```{r}
+knn_model <-
+  nearest_neighbor(neighbors = 1) |>
+  set_mode("classification") |> 
+  set_engine("kknn")
+indie_knn <- 
+  workflow() |> 
+  add_recipe(indie_recipe) |> 
+  add_model(knn_model) |> 
+  fit_resamples(indie_cv, control = control_resamples(save_pred = TRUE))
+```
+
+
+### K-Nearest Neighbour
+
+```{r}
+knitr::include_graphics("kmeans.png")
+```
+
+Column {data-width=275}
+-------------------------------------
+
+**Complete Linkage Dendogram** 
+
+In this dendrogram, I picked out 10 K-pop tunes and 10 K-R&B tracks from my collection. When we look at the complete linkage dendrogram, we can spot a clear moment where the dendrogram splits into three clusters. I marked this with a vertical red line. Taking a closer look, one cluster mostly has K-R&B songs, another is dominated by K-pop tunes, and the third cluster has only K-R&B tracks.
+
+From this, it seems like hierarchical clustering does a decent job of sorting songs in my collection by genre. But it's not perfect. Sometimes, it mixes songs from different genres, indicating that it's not flawless.
+
+**Heatmap**
+
+This heatmap displays the complete linkage dendrogram for the songs, alongside one for the feature values. It's fascinating to observe the separation of the feature values and the timbre values into two distinct clusters. One intriguing observation is the outlier status of "New Jeans" in terms of instrumentalness. However, upon listening to the song and comparing it to, for example, "Hola," it seems that the latter should have a higher instrumentalness value.
+
+**K-Nearest Neighbour**
+
+```{r}
+# indie_knn |> get_pr()
+knitr::include_graphics("prerecall.png")
+```
+
+
+The KNN (K-Nearest Neighbors) classifier achieved moderate performance in classifying songs into K-pop and K-R&B genres. With precision scores of approximately 0.71 for K-pop and 0.64 for K-R&B, the model correctly classified a significant portion of instances. However, the recall scores were lower, indicating that some genre instances were missed. Notably, K-R&B had a higher recall but lower precision compared to K-pop. 
+
 Tempogram
 ========================================
 
@@ -158,15 +382,15 @@ histies2
 ### Lowest Tempo: KPOP
 
 ```{r tempogram, echo=FALSE}
-graveola <- get_tidy_audio_analysis("1c6kkrWnpy68eYDfBdxNtF")
-
-graveola |>
-  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_classic() + labs(title = "Shopper - IU")
+# graveola <- get_tidy_audio_analysis("1c6kkrWnpy68eYDfBdxNtF")
+# 
+# graveola |>
+#   tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+#   ggplot(aes(x = time, y = bpm, fill = power)) +
+#   geom_raster() +
+#   scale_fill_viridis_c(guide = "none") +
+#   labs(x = "Time (s)", y = "Tempo (BPM)") +
+#   theme_classic() + labs(title = "Shopper - IU")
 
 ```
 
@@ -174,15 +398,15 @@ graveola |>
 ### Highest Tempo: KR&B
 
 ```{r tempogram2, echo=FALSE}
-graveola <- get_tidy_audio_analysis("4iZIvaus7v4wSjFvdF83NA")
-
-graveola |>
-  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_classic() + labs(title = "FLYING HIGH WITH U - Vinxen")
+# graveola <- get_tidy_audio_analysis("4iZIvaus7v4wSjFvdF83NA")
+# 
+# graveola |>
+#   tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+#   ggplot(aes(x = time, y = bpm, fill = power)) +
+#   geom_raster() +
+#   scale_fill_viridis_c(guide = "none") +
+#   labs(x = "Time (s)", y = "Tempo (BPM)") +
+#   theme_classic() + labs(title = "FLYING HIGH WITH U - Vinxen") 
 
 ```
 
@@ -480,7 +704,9 @@ With this collection, I aim to analyze and understand the differences between KR
 Column {data-width=500}
 -------------------------------------
 
-![]("C:\Users\anant\Downloads\overview.png")
+```{r picture, echo = F, out.width = '70%'}
+knitr::include_graphics("overview.png")
+```
 
 
 Corpus Analysis
