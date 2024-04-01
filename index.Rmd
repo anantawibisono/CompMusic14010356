@@ -144,14 +144,46 @@ key_templates <-
 ```{r duplicates, echo=FALSE}
 cleaned_dataset <- combined_data[!duplicated(combined_data$track.name) & !duplicated(combined_data$track.name, fromLast = TRUE), ]
 
-first_10_kpop <- head(kpop, 10)
-first_10_krnb <- head(krnb, 10)
+ first_10_kpop <- head(kpop, 10)
+ first_10_krnb <- head(krnb, 10)
+ 
+ mixed <- rbind(first_10_kpop, first_10_krnb)
 
-mixed <- rbind(first_10_kpop, first_10_krnb)
-
-cleaned_mixed <- mixed[!duplicated(mixed$track.name) & !duplicated(mixed$track.name, fromLast = TRUE), ]
+ cleaned_mixed <- mixed[!duplicated(mixed$track.name) & !duplicated(mixed$track.name, fromLast = TRUE), ]
 
 ```
+
+Overview
+========================================
+
+Column {data-width=500}
+-------------------------------------
+
+### Corpus Description
+
+**Introduction**
+
+I've put together a collection of playlists that represent my taste in music, particularly focusing on KRnB and KPOP genres. These playlists consist of four categories: two are tailored to my personal preferences in KRnB and KPOP, while the other two feature more general KRnB and KPOP tracks. The selection of these playlists is based on my love for KRnB and KPOP music.
+
+The personal playlists are curated by Spotify, using my listening history to tailor the content to my tastes. On the other hand, the broader KRnB and KPOP playlists are popular among a wider audience.
+
+With this collection, I aim to analyze and understand the differences between KRnB and KPOP. I'm also interested in exploring why I prefer certain KPOP and KRnB tracks over others. This analysis will help me gain insights into my music preferences and the unique characteristics of these genres.
+
+
+
+Column {data-width=500}
+-------------------------------------
+
+```{r picture, echo = F, out.width = '90%'}
+knitr::include_graphics("overview.png")
+```
+
+
+Column {data-width=250}
+-------------------------------------
+
+<iframe src="https://open.spotify.com/embed/playlist/5k7upSNskiHxxf6DSFnHD1?utm_source=generator" width="100%" height="380" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+
 
 Clustering
 ========================================
@@ -249,81 +281,81 @@ heatmaply(
 
 ```{r}
 
-kpop_rows <- cleaned_dataset %>% filter(genre == "kpop")
-krnb_rows <- cleaned_dataset %>% filter(genre == "krnb")
-
-indie <-
-  bind_rows(
-    kpop_rows |> mutate(playlist = "kpop") |> slice_head(n = 30),
-    krnb_rows |> mutate(playlist = "krnb") |> slice_head(n = 30)
-  ) |> 
-  add_audio_analysis()
+# kpop_rows <- cleaned_dataset %>% filter(genre == "kpop")
+# krnb_rows <- cleaned_dataset %>% filter(genre == "krnb")
+# 
+# indie <-
+#   bind_rows(
+#     kpop_rows |> mutate(playlist = "kpop") |> slice_head(n = 30),
+#     krnb_rows |> mutate(playlist = "krnb") |> slice_head(n = 30)
+#   ) |> 
+#   add_audio_analysis()
 ```
 
 ```{r}
-indie_features <-
-  indie |>  # For your portfolio, change this to the name of your corpus.
-  mutate(
-    playlist = factor(playlist),
-    segments = map2(segments, key, compmus_c_transpose),
-    pitches =
-      map(
-        segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      ),
-    timbre =
-      map(
-        segments,
-        compmus_summarise, timbre,
-        method = "mean",
-      )
-  ) |>
-  mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
-  mutate_at(vars(pitches, timbre), map, bind_rows) |>
-  unnest(cols = c(pitches, timbre))
+# indie_features <-
+#   indie |>  # For your portfolio, change this to the name of your corpus.
+#   mutate(
+#     playlist = factor(playlist),
+#     segments = map2(segments, key, compmus_c_transpose),
+#     pitches =
+#       map(
+#         segments,
+#         compmus_summarise, pitches,
+#         method = "mean", norm = "manhattan"
+#       ),
+#     timbre =
+#       map(
+#         segments,
+#         compmus_summarise, timbre,
+#         method = "mean",
+#       )
+#   ) |>
+#   mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
+#   mutate_at(vars(pitches, timbre), map, bind_rows) |>
+#   unnest(cols = c(pitches, timbre))
 ```
 
 ```{r}
-indie_recipe <-
-  recipe(
-    playlist ~
-      danceability +
-      energy +
-      loudness +
-      speechiness +
-      acousticness +
-      instrumentalness +
-      liveness +
-      valence +
-      tempo +
-      duration +
-      C + `C#|Db` + D + `D#|Eb` +
-      E + `F` + `F#|Gb` + G +
-      `G#|Ab` + A + `A#|Bb` + B +
-      c01 + c02 + c03 + c04 + c05 + c06 +
-      c07 + c08 + c09 + c10 + c11 + c12,
-    data = indie_features           # Use the same name as the previous block.
-  ) |>
-  step_center(all_predictors()) |>
-  step_scale(all_predictors())      # Converts to z-scores.
-  # step_range(all_predictors())    # Sets range to [0, 1].
+# indie_recipe <-
+#   recipe(
+#     playlist ~
+#       danceability +
+#       energy +
+#       loudness +
+#       speechiness +
+#       acousticness +
+#       instrumentalness +
+#       liveness +
+#       valence +
+#       tempo +
+#       duration +
+#       C + `C#|Db` + D + `D#|Eb` +
+#       E + `F` + `F#|Gb` + G +
+#       `G#|Ab` + A + `A#|Bb` + B +
+#       c01 + c02 + c03 + c04 + c05 + c06 +
+#       c07 + c08 + c09 + c10 + c11 + c12,
+#     data = indie_features           # Use the same name as the previous block.
+#   ) |>
+#   step_center(all_predictors()) |>
+#   step_scale(all_predictors())      # Converts to z-scores.
+#   # step_range(all_predictors())    # Sets range to [0, 1].
 ```
 
 ```{r}
-indie_cv <- indie_features |> vfold_cv(5)
+# indie_cv <- indie_features |> vfold_cv(5)
 ```
 
 ```{r}
-knn_model <-
-  nearest_neighbor(neighbors = 1) |>
-  set_mode("classification") |> 
-  set_engine("kknn")
-indie_knn <- 
-  workflow() |> 
-  add_recipe(indie_recipe) |> 
-  add_model(knn_model) |> 
-  fit_resamples(indie_cv, control = control_resamples(save_pred = TRUE))
+# knn_model <-
+#   nearest_neighbor(neighbors = 1) |>
+#   set_mode("classification") |> 
+#   set_engine("kknn")
+# indie_knn <- 
+#   workflow() |> 
+#   add_recipe(indie_recipe) |> 
+#   add_model(knn_model) |> 
+#   fit_resamples(indie_cv, control = control_resamples(save_pred = TRUE))
 ```
 
 
@@ -682,31 +714,6 @@ Regarding the data from the Spotify API, it seems less confident in identifying 
 Overall, these observations underscore how songs can differ significantly in their energy, and musical complexity, as perceived by listeners.
 
 
-
-Overview
-========================================
-
-Column {data-width=500}
--------------------------------------
-
-### Corpus Description
-
-**Introduction**
-
-I've put together a collection of playlists that represent my taste in music, particularly focusing on KRnB and KPOP genres. These playlists consist of four categories: two are tailored to my personal preferences in KRnB and KPOP, while the other two feature more general KRnB and KPOP tracks. The selection of these playlists is based on my deep love for KRnB and KPOP music.
-
-The personal playlists are curated by Spotify, using my listening history to tailor the content to my tastes. On the other hand, the broader KRnB and KPOP playlists are popular among a wider audience.
-
-With this collection, I aim to analyze and understand the differences between KRnB and KPOP. I'm also interested in exploring why I prefer certain KPOP and KRnB tracks over others. This analysis will help me gain insights into my music preferences and the unique characteristics of these genres.
-
-
-
-Column {data-width=500}
--------------------------------------
-
-```{r picture, echo = F, out.width = '70%'}
-knitr::include_graphics("overview.png")
-```
 
 
 Corpus Analysis
