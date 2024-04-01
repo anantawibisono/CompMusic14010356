@@ -156,7 +156,7 @@ cleaned_dataset <- combined_data[!duplicated(combined_data$track.name) & !duplic
 Overview
 ========================================
 
-Column {data-width=500}
+Column {data-width=800}
 -------------------------------------
 
 ### Corpus Description
@@ -171,18 +171,12 @@ With this collection, I aim to analyze and understand the differences between KR
 
 
 
-Column {data-width=500}
+Column {data-width=350}
 -------------------------------------
 
-```{r picture, echo = F, out.width = '90%'}
+```{r picture, echo = F, out.width = '100%'}
 knitr::include_graphics("overview.png")
 ```
-
-
-Column {data-width=250}
--------------------------------------
-
-<iframe src="https://open.spotify.com/embed/playlist/5k7upSNskiHxxf6DSFnHD1?utm_source=generator" width="100%" height="380" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
 
 Clustering
@@ -456,11 +450,14 @@ Now, let's take a closer look at the tempogram analysis of these songs.
 
 The tempogram displayed here is a non-cyclical one, meaning it may show multiples of the main BPM. In this case, it's interesting because Spotify tagged the song with a BPM of 75, but the tempogram indicates a BPM of around 200 for most of the song, with only a small dot around 75 BPM at the beginning. However, when you listen to the song, it starts to make sense. At the beginning, there's a section with a distinct clapping noise that seems to follow a rhythm of 75 BPM, uninterrupted by other instruments except for the vocals. This is followed by a beat that might sound like 200 BPM but is actually closer to 75 BPM to the human ear.
 
+<iframe style="border-radius:12px; padding: 10px;" src="https://open.spotify.com/embed/track/1c6kkrWnpy68eYDfBdxNtF?utm_source=generator" width="100%" height="110" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
+
+
 **FLYING HIGH WITH U - Vinxen**
 
 Interestingly, the tempogram for this song does align with the BPM provided by Spotify, which is around 210 BPM. The tempogram even indicates activity for multiples of 210 BPM. However, despite this numerical match, when you actually listen to the song, it doesn't sound like it has such a fast tempo. This discrepancy might be due to the difference in tempo between the drums and the vocals. While the drums might be driving the high BPM detected by the tempogram, the vocals maintain a slower pace, resulting in an overall perception of a slower tempo. 
 
-
+<iframe style="border-radius:12px; padding: 10px;" src="https://open.spotify.com/embed/track/4iZIvaus7v4wSjFvdF83NA?utm_source=generator" width="100%" height="110" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
 
 Key Analysis
 ========================================
@@ -570,7 +567,15 @@ Now lets look at the keygrams.
 
 In looking at the keygrams of the most popular songs in the corpus, some interesting patterns emerge regarding their tonal centers.
 
+**Song in the key of D**
+
+<iframe style="border-radius:12px; padding: 10px;" src="https://open.spotify.com/embed/track/3m5PgWSClkZ44vdFmPiqpq?utm_source=generator" width="100%" height="110" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
+
 For instance, when looking at the song in the key of D, we notice that the confidence for D minor key dominates, which suggests a strong association with that tonality. But what's really interesting is that the confidence for C sharp minor key pops up even more frequently than for D minor. This might be because of some connection between D minor and C sharp minor keys. The keys share some of the same notes, which could explain why C sharp minor shows up so prominently alongside D minor.
+
+**Song in the key of G**
+
+<iframe style="border-radius:12px; padding: 10px;" src="https://open.spotify.com/embed/track/4RiudH8RehvLLrk8uNgIdR?utm_source=generator" width="100%" height="110" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
 
 Now, the keygram of the song in G key is a bit more straightforward. It's clear that both G minor and major keys rule the roost throughout the song, indicating a strong focus on G as the tonal center. Also interesting to note: there are a couple of moments in the song where the keygram isn't too sure about which key it's in, besides the usual uncertainty at the beginning and end of songs. These moments of uncertainty could signal shifts in harmony or brief changes in tonality within the song.
 
@@ -713,8 +718,9 @@ Regarding the data from the Spotify API, it seems less confident in identifying 
 
 Overall, these observations underscore how songs can differ significantly in their energy, and musical complexity, as perceived by listeners.
 
+<iframe style="border-radius:12px; padding: 10px;" src="https://open.spotify.com/embed/track/2bdVgAQgosGUJoViVDNeOV?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
 
-
+<iframe style="border-radius:12px; padding: 10px;" src="https://open.spotify.com/embed/track/0RDqNCRBGrSegk16Avfzuq?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
 
 Corpus Analysis
 ========================================
