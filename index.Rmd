@@ -179,12 +179,16 @@ First i want to use clustering to show whether significant differences exist bet
 
 After this I delved deeper into the individual features of the songs
 
-- [Tempo Analysis]()
-- [Key Analysis]()
-- [Song Structure Analysis]()
-- [Chroma Analysis]()
-- [Energy and Acousticness Analysis]()
-- [Loudness in relation to Energy Analysis]()
+- [Tempo Analysis](https://anantawibisono.github.io/CompMusic14010356/#tempo)
+- [Key Analysis](https://anantawibisono.github.io/CompMusic14010356/#key)
+- [Song Structure Analysis](https://anantawibisono.github.io/CompMusic14010356/#song-structure)
+- [Chroma Analysis](https://anantawibisono.github.io/CompMusic14010356/#chroma)
+- [Energy and Acousticness Analysis](https://anantawibisono.github.io/CompMusic14010356/#energy-and-acousticness)
+- [Loudness in relation to Energy Analysis](https://anantawibisono.github.io/CompMusic14010356/#loudness-vs-energy)
+
+And finally the conclusion 
+
+- [Conclusion](https://anantawibisono.github.io/CompMusic14010356/#conclusion)
 
 **Personal Playlists**
 
@@ -441,15 +445,15 @@ histies2
 ### Lowest Tempo: KPOP
 
 ```{r tempogram, echo=FALSE}
-# graveola <- get_tidy_audio_analysis("1c6kkrWnpy68eYDfBdxNtF")
-# 
-# graveola |>
-#   tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
-#   ggplot(aes(x = time, y = bpm, fill = power)) +
-#   geom_raster() +
-#   scale_fill_viridis_c(guide = "none") +
-#   labs(x = "Time (s)", y = "Tempo (BPM)") +
-#   theme_classic() + labs(title = "Shopper - IU")
+graveola <- get_tidy_audio_analysis("1c6kkrWnpy68eYDfBdxNtF")
+
+graveola |>
+  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic() + labs(title = "Shopper - IU")
 
 ```
 
@@ -457,15 +461,15 @@ histies2
 ### Highest Tempo: KR&B
 
 ```{r tempogram2, echo=FALSE}
-# graveola <- get_tidy_audio_analysis("4iZIvaus7v4wSjFvdF83NA")
-# 
-# graveola |>
-#   tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
-#   ggplot(aes(x = time, y = bpm, fill = power)) +
-#   geom_raster() +
-#   scale_fill_viridis_c(guide = "none") +
-#   labs(x = "Time (s)", y = "Tempo (BPM)") +
-#   theme_classic() + labs(title = "FLYING HIGH WITH U - Vinxen") 
+graveola <- get_tidy_audio_analysis("4iZIvaus7v4wSjFvdF83NA")
+
+graveola |>
+  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic() + labs(title = "FLYING HIGH WITH U - Vinxen")
 
 ```
 
