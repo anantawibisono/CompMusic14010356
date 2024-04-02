@@ -163,13 +163,40 @@ Column {data-width=800}
 
 **Introduction**
 
-I've put together a collection of playlists that represent my taste in music, particularly focusing on KRnB and KPOP genres. These playlists consist of four categories: two are tailored to my personal preferences in KRnB and KPOP, while the other two feature more general KRnB and KPOP tracks. The selection of these playlists is based on my love for KRnB and KPOP music.
+I've assembled a collection of playlists reflecting my music preferences, with a focus on KRnB and KPOP genres. These playlists fall into four categories: two are custom-tailored to my individual tastes in KRnB and KPOP, while the other two offer a broader selection of KRnB and KPOP tracks.
 
-The personal playlists are curated by Spotify, using my listening history to tailor the content to my tastes. On the other hand, the broader KRnB and KPOP playlists are popular among a wider audience.
+The personal playlists are curated by Spotify, leveraging my listening history to deliver content tailored to my preferences. Conversely, the broader KRnB and KPOP playlists appeal to a wider audience.
+
+Spotify-curated playlists already contained 50 songs each, while for the broader playlists, I randomly picked 50 songs from larger playlists. 
 
 With this collection, I aim to analyze and understand the differences between KRnB and KPOP. I'm also interested in exploring why I prefer certain KPOP and KRnB tracks over others. This analysis will help me gain insights into my music preferences and the unique characteristics of these genres.
 
+**Portoflio**
 
+First i want to use clustering to show whether significant differences exist between the genres of KR&B and K-pop, while also providing an overview of the prevalent features within each genre.
+
+- [Clustering](https://anantawibisono.github.io/CompMusic14010356/#clustering)
+
+After this I delved deeper into the individual features of the songs
+
+- [Tempo Analysis]()
+- [Key Analysis]()
+- [Song Structure Analysis]()
+- [Chroma Analysis]()
+- [Energy and Acousticness Analysis]()
+- [Loudness in relation to Energy Analysis]()
+
+**Personal Playlists**
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/5k7upSNskiHxxf6DSFnHD1?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/25tn6jO4XMfbtSv9ukYvYt?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"  data-external="1"></iframe>
+
+**General Playlists**
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2TJHOlrTUoLMHs9CTyxN9n?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
 
 Column {data-width=350}
 -------------------------------------
@@ -359,8 +386,16 @@ heatmaply(
 knitr::include_graphics("kmeans.png")
 ```
 
+### K-Nearest Neighbour results
+
+```{r}
+knitr::include_graphics("prerecall.png")
+```
+
 Column {data-width=275}
 -------------------------------------
+
+### Description
 
 **Complete Linkage Dendogram** 
 
@@ -368,21 +403,19 @@ In this dendrogram, I picked out 10 K-pop tunes and 10 K-R&B tracks from my coll
 
 From this, it seems like hierarchical clustering does a decent job of sorting songs in my collection by genre. But it's not perfect. Sometimes, it mixes songs from different genres, indicating that it's not flawless.
 
+This may be due to the subjective nature of categorizing songs into genres, even leading to debates about which genre a song belongs to.
+
 **Heatmap**
 
-This heatmap displays the complete linkage dendrogram for the songs, alongside one for the feature values. It's fascinating to observe the separation of the feature values and the timbre values into two distinct clusters. One intriguing observation is the outlier status of "New Jeans" in terms of instrumentalness. However, upon listening to the song and comparing it to, for example, "Hola," it seems that the latter should have a higher instrumentalness value.
+This heatmap displays the complete linkage dendrogram for the songs, alongside one for the feature values. It's fascinating to observe the separation of the tempo and chroma values and the timbre values into two distinct clusters. One intriguing observation is the outlier status of "New Jeans" in terms of instrumentalness. However, upon listening to the song and comparing it to, for example, "Hola," it seems that the latter should have a higher instrumentalness value.
+
+ 
 
 **K-Nearest Neighbour**
 
-```{r}
-# indie_knn |> get_pr()
-knitr::include_graphics("prerecall.png")
-```
+The KNN (K-Nearest Neighbors) classifier achieved moderate performance in classifying songs into K-pop and K-R&B genres. With precision scores of approximately 0.71 for K-pop and 0.64 for K-R&B, the model correctly classified a significant portion of instances. However, the recall scores were lower, indicating that some genre instances were missed. Notably, K-R&B had a higher recall but lower precision compared to K-pop.
 
-
-The KNN (K-Nearest Neighbors) classifier achieved moderate performance in classifying songs into K-pop and K-R&B genres. With precision scores of approximately 0.71 for K-pop and 0.64 for K-R&B, the model correctly classified a significant portion of instances. However, the recall scores were lower, indicating that some genre instances were missed. Notably, K-R&B had a higher recall but lower precision compared to K-pop. 
-
-Tempogram
+Tempo
 ========================================
 
 Column {.tabset}
@@ -439,7 +472,9 @@ histies2
 Column {data-width=275}
 -------------------------------------
 
-**Key Histogram**
+### Description
+
+**Tempo Histogram**
 
 
 As you can see from the histogram, most K-pop songs tend to hover around 125 beats per minute (BPM), while KR&B songs often have a spike around 85 BPM. However, it's common for songs in both genres to stray from these averages. One standout outlier among KR&B tracks is "FLYING HIGH WITH U" by Vinxen. On the other hand, "shopper" by IU is one of the K-pop songs with a lower BPM. You can find these outliers by hovering over the plot, of which the tooltip shows the title and the BPM of each song. 
@@ -459,7 +494,7 @@ Interestingly, the tempogram for this song does align with the BPM provided by S
 
 <iframe style="border-radius:12px; padding: 10px;" src="https://open.spotify.com/embed/track/4iZIvaus7v4wSjFvdF83NA?utm_source=generator" width="100%" height="110" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
 
-Key Analysis
+Key
 ========================================
 
 Column {.tabset}
@@ -555,6 +590,8 @@ twenty_five |>
 Column {data-width=275}
 -------------------------------------
 
+### Description
+
 **Key Histogram**
 
 In the genre of KPOP, the most prevalent keys are C sharp, F, and G, as indicated by the plots. Conversely, in KRnB, the histogram reveals that the A and G key is favored among other keys.
@@ -580,39 +617,42 @@ For instance, when looking at the song in the key of D, we notice that the confi
 Now, the keygram of the song in G key is a bit more straightforward. It's clear that both G minor and major keys rule the roost throughout the song, indicating a strong focus on G as the tonal center. Also interesting to note: there are a couple of moments in the song where the keygram isn't too sure about which key it's in, besides the usual uncertainty at the beginning and end of songs. These moments of uncertainty could signal shifts in harmony or brief changes in tonality within the song.
 
 
-Self similarity matrices
+Song Structure
 ========================================
 
-Column {data-width=750}
+Column {.tabset}
 -------------------------------------
 
-### Self similarity matrix
-
-```{r self plot, echo=FALSE}
-bzt <-
-  get_tidy_audio_analysis("1ZEFYW6nPEvIcsIvymgsLk") |> # Change URI.
-  compmus_align(bars, segments) |>                     # Change `bars`
-  select(bars) |>                                      #   in all three
-  unnest(bars) |>                                      #   of these lines.
+### Clear Structure
+```{r}
+maria <-
+  get_tidy_audio_analysis("2DwUdMJ5uxv20EhAildreg") |>
+  compmus_align(bars, segments) |>
+  select(bars) |>
+  unnest(bars) |>
   mutate(
     pitches =
       map(segments,
         compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
+        method = "acentre", norm = "manhattan"
       )
   ) |>
   mutate(
     timbre =
       map(segments,
         compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
+        method = "mean"
       )
   )
-```
-
-```{r self plot2, echo=FALSE}
-  bzt |>
-  compmus_self_similarity(timbre, "cosine") |> 
+bind_rows(
+  maria |>
+    compmus_self_similarity(pitches, "aitchison") |>
+    mutate(d = d / max(d), type = "Chroma"),
+  maria |>
+    compmus_self_similarity(timbre, "euclidean") |>
+    mutate(d = d / max(d), type = "Timbre")
+) |>
+  mutate() |>
   ggplot(
     aes(
       x = xstart + xduration / 2,
@@ -624,20 +664,89 @@ bzt <-
   ) +
   geom_tile() +
   coord_fixed() +
+  facet_wrap(~type) +
   scale_fill_viridis_c(guide = "none") +
   theme_classic() +
-  labs(x = "", y = "") + labs(title = "WA-R-R - Colde")
+  labs(x = "", y = "") + labs(title = "Cookie - Newjeans")
 ```
 
-Column {data-width=250}
+
+### Unclear Structure
+```{r}
+maria2 <-
+  get_tidy_audio_analysis("2jiI8bNSDu7UxTtDCOqh3L") |>
+  compmus_align(bars, segments) |>
+  select(bars) |>
+  unnest(bars) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "acentre", norm = "manhattan"
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "mean"
+      )
+  )
+bind_rows(
+  maria2 |>
+    compmus_self_similarity(pitches, "aitchison") |>
+    mutate(d = d / max(d), type = "Chroma"),
+  maria2 |>
+    compmus_self_similarity(timbre, "euclidean") |>
+    mutate(d = d / max(d), type = "Timbre")
+) |>
+  mutate() |>
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  facet_wrap(~type) +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "") + labs(title = "21 - DEAN")
+```
+
+
+Column {data-width=275}
 -------------------------------------
-**Description**
 
-no description yet 
+### Description
 
-this is my fav song tho btw
+I've chosen two songs, using trial-and-error to see which one has a clear structure and which one doesn't. The song with the clear structure is called Cookie by NewJeans and the song with the less clear structure is called 21 by DEAN. 
 
-Chroma and Timbre plots
+**Clear Structure**
+
+With over 200 million streams on Spotify, "Cookie" stands out as one of the most popular K-pop songs of its generation. With such widespread popularity, it's no surprise that the song boasts a clear structure, evident even in its timbre plot.
+
+Take a look at the plot, and you'll notice distinct blocks and paths. These blocks represent homogeneous sections, like verses or choruses. Understanding that the song follows a Verse-Chorus-Verse-Chorus-Bridge-Chorus structure helps decipher these blocks and paths. 
+
+Each block corresponds to a verse or a chorus, making it easy to distinguish between different sections of the song. Furthermore, as you listen to the song, you'll likely pick up on how variations in vocal timbre contribute to the distinct blocks seen in the timbre plot. 
+
+Additionally, the path-like structures that run parallel to the main diagonal indicate repeated sections. In "Cookie," these path-like structures prominently appear in each chorus, emphasizing the song's repetitive elements.
+
+<iframe style="border-radius:12px; padding-top: 10px; padding-right: 10px; padding-bottom: 1px; padding-left: 10px;" src="https://open.spotify.com/embed/track/2DwUdMJ5uxv20EhAildreg?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
+
+**Unclear Structure**
+
+"21" by DEAN, boasting over 30 million streams, is undeniably popular, following a verse-chorus structure like many hits. Despite its popularity, the song's timbre remains relatively uniform throughout, making it challenging to discern distinct block structures. However, the path-like structures characteristic of a chorus are still noticeable, guiding listeners through the song's familiar sections.
+
+Interestingly, examining the chroma plot reveals the bridge section, a detail not as evident in the self-similarity matrix of "Cookie" by NewJeans.
+
+<iframe style="border-radius:12px; padding: 10px;" src="https://open.spotify.com/embed/track/2jiI8bNSDu7UxTtDCOqh3L?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
+
+Chroma
 ========================================
 
 Column {.tabset}
@@ -703,8 +812,10 @@ wood2 |>
 
 
 
-Column {data-width=150}
+Column {data-width=275}
 -------------------------------------
+
+### Description
 
 **Chromagram Comparison**
 
@@ -722,7 +833,7 @@ Overall, these observations underscore how songs can differ significantly in the
 
 <iframe style="border-radius:12px; padding: 10px;" src="https://open.spotify.com/embed/track/0RDqNCRBGrSegk16Avfzuq?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" data-external="1"></iframe>
 
-Corpus Analysis
+Energy and Acousticness
 ========================================
 
 
@@ -785,8 +896,10 @@ max_acousticness_row <- combined_data[which.min(combined_data$acousticness), ]
 print(max_acousticness_row)
 ```
 
-Column {data-width=250}
+Column {data-width=275}
 -------------------------------------
+
+### Description
 
 **Energy Distribution**
 
@@ -810,7 +923,7 @@ Looking at the plot, it's clear that KRnB songs tend to have higher acousticness
 
 
 
-Relation between loudness and energy
+Loudness vs Energy
 ========================================
 
 
@@ -841,10 +954,19 @@ corr_plot
 Column {data-width=250}
 -------------------------------------
 
-
-
-**Description**
+### Description
 
 In the plot, you can clearly see how energy and loudness are linked, especially with that regression line slicing through the data points. There's also this faint boundary line that seems to separate KPOP and KRnB songs. Oh, and there's this one standout: the KPOP hit "Cupid" by Fifty Fifty, chilling in the KRnB zone for loudness and energy. Just hover over the point to check it out!
 
+Conclusion
+========================================
+
+
+After thorough exploration, it's evident that KRnB and KPOP are distinct genres with noticeable differences. KPOP tends to have a higher overall tempo compared to KRnB. Moreover, the choice of keys varies significantly between these genres.
+
+In terms of song structure, KPOP tends to exhibit more discernible Self-Similarity Matrices (SSMs), indicating clearer patterns. Additionally, when examining chromatic differences, KPOP tends to utilize a wider range of chroma.
+
+Furthermore, KPOP generally exudes more energy and features less acoustic elements compared to KRnB. This difference in energy aligns with my personal taste, which tends to lean towards more specific preferences across various features.
+
+In summary, while both KRnB and KPOP offer unique musical experiences, their distinct characteristics appeal to different tastes and preferences.
 
